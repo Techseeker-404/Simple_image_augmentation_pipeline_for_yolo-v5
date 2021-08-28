@@ -1,0 +1,192 @@
+n [11]: tes1
+Out[11]: 'MOHANAN NAIR   LALITHAMBIKA'
+
+In [12]: tes2 = 'ANAND 3'
+
+In [13]: tes2 = re.sub("[^A-Z]"," ",tes2)
+
+In [14]: tes2
+Out[14]: 'ANAND  '
+
+In [15]: tes3 = '~ PEROORKADA, KERALA'
+
+In [16]: tes3 = re.sub("[^A-Z]"," ",tes3)
+
+In [17]: tes3
+Out[17]: '  PEROORKADA  KERALA'
+
+In [18]: tes3 = '~ PEROORKADA, KERALA'
+
+In [19]: tes3 = re.sub("[^A-Z,-;]"," ",tes3)
+
+In [20]: tes3
+Out[20]: '  PEROORKADA, KERALA'
+ for i in zip(hell.items(),des):
+    ...:     key = i[0][0]
+    ...:     value = i[0][1]
+    ...:     file_name = i[1]
+    ...:     print(key, value, file_name)
+
+In [1]: import ast
+
+In [2]: import pandas as pd
+
+In [3]: df = pd.read_csv("yolo_files.csv")
+
+In [4]: check = df.loc[2,"bbox_data"]
+
+In [5]: data = ast.literal_eval(check)
+
+In [6]: class_no = int(data[0][0])
+
+In [7]: class_no
+Out[7]: 0
+
+In [8]: data[1:]
+Out[8]: 
+['3 0.570610 0.565408 0.212336 0.058428\n',
+ '2 0.493091 0.634953 0.093023 0.067218\n',
+ '5 0.516684 0.773009 0.358611 0.101344\n']
+
+In [9]: data[0]
+Out[9]: '0 0.429053 0.308428 0.176609 0.079111\n'
+
+In [10]: data[0][1:]
+Out[10]: ' 0.429053 0.308428 0.176609 0.079111\n'
+
+In [11]: float(data[0][1:])
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-11-6c38150cb966> in <module>
+----> 1 float(data[0][1:])
+
+ValueError: could not convert string to float: ' 0.429053 0.308428 0.176609 0.079111\n'
+
+In [12]: data[0][1:].strip("\")
+  File "<ipython-input-12-74adbe99e904>", line 1
+    data[0][1:].strip("\")
+                          ^
+SyntaxError: EOL while scanning string literal
+
+
+In [13]: data[0][1:].split("\n")
+Out[13]: [' 0.429053 0.308428 0.176609 0.079111', '']
+
+In [14]: data[0][1:].split("\")
+  File "<ipython-input-14-d1ad87e49ed5>", line 1
+    data[0][1:].split("\")
+                          ^
+SyntaxError: EOL while scanning string literal
+
+
+In [15]: data[0][1:].split("\n")[0]
+Out[15]: ' 0.429053 0.308428 0.176609 0.079111'
+
+In [16]: float(data[0][1:].split("\n")[0])
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-16-08b012ab49eb> in <module>
+----> 1 float(data[0][1:].split("\n")[0])
+
+ValueError: could not convert string to float: ' 0.429053 0.308428 0.176609 0.079111'
+
+In [17]: data[0][1:].split("\n")[0][2]
+Out[17]: '.'
+
+In [18]: data[0][1:].split(" ")[0][2]
+---------------------------------------------------------------------------
+IndexError                                Traceback (most recent call last)
+<ipython-input-18-20ba856ad511> in <module>
+----> 1 data[0][1:].split(" ")[0][2]
+
+IndexError: string index out of range
+
+In [19]: data[0][1:].split(" ")[0]
+Out[19]: ''
+
+In [20]: data[0][1:].split(" ")
+Out[20]: ['', '0.429053', '0.308428', '0.176609', '0.079111\n']
+
+In [21]: import re
+
+In [22]: new_data = re.sub("[^0.0-0.9<]", "",data[0][1:])
+
+In [23]: new_data
+Out[23]: '0.900.00.090.09'
+
+In [24]: new_data = re.sub("[^1-9-.]", "",data[0][1:])
+
+In [25]: new_data
+Out[25]: '.42953.38428.17669.79111'
+
+In [26]: new_data = re.sub("[^0-9-.]", " ",data[0][1:])
+
+In [27]: new_data
+Out[27]: ' 0.429053 0.308428 0.176609 0.079111 '
+
+In [31]: new_data = re.sub("[^0-9-.]", "[]",data[0][1:])
+
+In [32]: new_data
+Out[32]: '[]0.429053[]0.308428[]0.176609[]0.079111[]'
+
+In [33]: new_data = re.sub("[^0-9-.]", " ",data[0][1:])
+
+In [34]: new_list = new_data.split(" ")
+
+In [35]: new_list
+Out[35]: ['', '0.429053', '0.308428', '0.176609', '0.079111', '']
+
+In [36]: for i in new_list:
+    ...:     i = float(i)
+    ...: 
+---------------------------------------------------------------------------
+ValueError                                Traceback (most recent call last)
+<ipython-input-36-0ea4f9a0be75> in <module>
+      1 for i in new_list:
+----> 2     i = float(i)
+      3 
+
+ValueError: could not convert string to float: ''
+
+In [37]: import re
+
+In [38]: new_list = re.findall("\d+\.\d+",new_list)
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+<ipython-input-38-cd51dc0fc844> in <module>
+----> 1 new_list = re.findall("\d+\.\d+",new_list)
+
+/usr/lib/python3.8/re.py in findall(pattern, string, flags)
+    239 
+    240     Empty matches are included in the result."""
+--> 241     return _compile(pattern, flags).findall(string)
+    242 
+    243 def finditer(pattern, string, flags=0):
+
+TypeError: expected string or bytes-like object
+
+In [39]: new_list = re.findall("\d+\.\d+",new_data)
+
+In [40]: new_list
+Out[40]: ['0.429053', '0.308428', '0.176609', '0.079111']
+
+In [41]: for i in new_list:
+    ...:     i = float(i)
+    ...: 
+
+In [42]: new_list = [i.astype(float) for i in new_list]
+---------------------------------------------------------------------------
+AttributeError                            Traceback (most recent call last)
+<ipython-input-42-d4eebe1a1cfb> in <module>
+----> 1 new_list = [i.astype(float) for i in new_list]
+
+<ipython-input-42-d4eebe1a1cfb> in <listcomp>(.0)
+----> 1 new_list = [i.astype(float) for i in new_list]
+
+AttributeError: 'str' object has no attribute 'astype'
+
+In [43]: new_list = [float(i) for i in new_list]
+
+In [44]: new_list
+Out[44]: [0.429053, 0.308428, 0.176609, 0.079111]
+
