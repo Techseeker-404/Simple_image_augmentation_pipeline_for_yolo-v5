@@ -56,7 +56,7 @@ class OrganiseYoloData:
         #print(class_lst)    
         return class_lst
 
-    def create_organiseData(self,file_name="yolo_train.csv",csv=True):
+    def create_organiseData(self,file_name="yolo_train.csv",csv=False, save_file=False):
         datas = pd.DataFrame()
         dataframe = self.create_dataframe()
         for ind, row in dataframe.iterrows():
@@ -71,8 +71,10 @@ class OrganiseYoloData:
             df_set = pd.DataFrame(files_dict)
             datas = datas.append(df_set,ignore_index=True)
             print(files_dict)
-        print(datas)
-        datas.to_csv(file_name)
+        #print(datas)
+        if save_file == True:
+            datas.to_csv(file_name)
+        return datas
 
 if __name__ == "__main__":
     #images_path = "../YOLO_scanner/images/"
@@ -85,4 +87,4 @@ if __name__ == "__main__":
 
     DataOrg = OrganiseYoloData(args.images_path, args.labels_path)
     #DataOrg.create_dataframe()
-    DataOrg.create_organiseData(file_name="yolo_object_detection.csv",csv=False)
+    DataOrg.create_organiseData(file_name="yolo_object_detection.csv", save_file=True)
