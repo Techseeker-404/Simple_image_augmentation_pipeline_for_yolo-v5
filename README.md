@@ -14,9 +14,12 @@
 
 #### Once we have images in `images` folder and labels in `labels` folder we can augment images by     running command `python3.8 augmentPipe.py -ipt <images-path> -lpt <labels-path>` on terminal which will create augmented images and labels in a folder called `augmented`
 
-##### `tree augmented                                                                                      ─╯
+#### Also there is provision to created a .csv file which contains all images path and data classes of that images with its bboxes . It will comes in handy to keep track of image dataset and also needs to convert it into any other format.
+
+##### ```$ tree augmented```
+```
 augmented
 ├── images
 └── labels
-`
-#### Also there is provision to created a .csv file which contains all images path and data classes of that images with its bboxes . It will comes in handy to keep track of image dataset and also needs to convert it into any other format.
+```
+
