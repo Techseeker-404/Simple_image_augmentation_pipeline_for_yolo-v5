@@ -133,5 +133,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     AugData = AugmentYoloData(args.images_path, args.labels_path)
-    AugData.augmenter(num_aug=args.num_of_Aug)
+    AugData.augmenter(num_aug=int(args.num_of_Aug))
 
