@@ -63,9 +63,10 @@ class AugmentYoloData(OrganiseYoloData):
             class_id = []
             bboxes = []
             img_path = row["file_path"]
-            print(img_path )
+            print("\n")
+            print(img_path,"\n" )
             file_name, _ = os.path.splitext(img_path.split("/")[-1])
-            print(file_name)
+            print(file_name, "\n")
             data = row["bbox_data"]
             for i in range(len(data)):
             #    print(dt)
@@ -74,42 +75,45 @@ class AugmentYoloData(OrganiseYoloData):
                 bbox = data[i][1]
                 bboxes.append(bbox)
                 print(class_no, "&", bbox[0], bbox[1], bbox[2], bbox[3])
-            image = cv2.imread(img_path)
-            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-            bboxParams = Alb.BboxParams(
-                format='yolo', 
-                label_fields=['class_id']
-            )
-            transform = Alb.Compose(
-                self.transforms,
-                bbox_params = bboxParams
-            )
-            for i in tqdm(range(num_aug)):
-                transformed = transform(
-                        image=image, 
-                        bboxes=bboxes, 
-                        class_id=class_id
+            try:
+                image = cv2.imread(img_path)
+                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+                bboxParams = Alb.BboxParams(
+                    format='yolo', 
+                    label_fields=['class_id']
                 )
-                savlst = list()
-                for j,tup in enumerate(transformed["bboxes"]):
-                    savlst.append([
-                        int(transformed["class_id"][j]),
-                        tup[0], tup[1], tup[2], tup[3]
-                    ])
-                print(savlst)
-                sav_arr = np.array(savlst)
-                #print(sav_arr)
-                np.savetxt(
-                os.path.join(augmented_labels,f"{file_name}_{i}.txt"),
-                sav_arr,
-                fmt = ["%d","%f","%f","%f","%f"],
+                transform = Alb.Compose(
+                    self.transforms,
+                    bbox_params = bboxParams
                 )
-                new_image = transformed["image"]
-                new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB)
-                cv2.imwrite(os.path.join(augmented_images,f"{file_name}_{i}.jpg"),new_image)
+                for i in tqdm(range(num_aug)):
+                    transformed = transform(
+                            image=image, 
+                            bboxes=bboxes, 
+                            class_id=class_id
+                    )
+                    savlst = list()
+                    for j,tup in enumerate(transformed["bboxes"]):
+                        savlst.append([
+                            int(transformed["class_id"][j]),
+                            tup[0], tup[1], tup[2], tup[3]
+                        ])
+                    #print(savlst)
+                    sav_arr = np.array(savlst)
+                    #print(sav_arr)
+                    np.savetxt(
+                    os.path.join(augmented_labels,f"{file_name}_{i}.txt"),
+                    sav_arr,
+                    fmt = ["%d","%f","%f","%f","%f"],
+                    )
+                    new_image = transformed["image"]
+                    new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB)
+                    cv2.imwrite(os.path.join(augmented_images,f"{file_name}_{i}.jpg"),new_image)
+            except Exception:
+                print(f"{img_path} is not a valid image file. \n\n")
             #break
             count +=1
-        print(count)
+        print("Total images: ", count)
 
 
 if __name__ == "__main__":
