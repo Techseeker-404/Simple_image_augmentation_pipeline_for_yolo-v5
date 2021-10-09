@@ -8,9 +8,9 @@
 
 #### <ins> Augmentation </ins>
 
-##### If the image dataset we annotated is tad less for training any state of the art model. We need to augment that images to some trainable amount of images (which can be augmented to any further number of images).
+##### If the image dataset we annotated is tad less for training any state of the art model. We need to augment that images to some trainable amount of images (Using this library a dataset can be augmented to any further number of images).
 
-#####     For this , created a library which sits on top of the "Albumentations " library. Here apart from augmenting images the bounding box data will also be preserved . 
+#####    This Library was created for this purpose.Which sits on top of the "Albumentations " library. Here apart from augmenting images the bounding box data will also be preserved . 
 
 #### Once we have images in `images` folder and labels in `labels` folder we can augment images by     running command `python3.8 augmentPipe.py -ipt <images-path> -lpt <labels-path>` on terminal which will create augmented images and labels in a folder called `augmented` , Also number of augmentaions per image can be passed as argument `-Aug <number>`. If the class is imported on a python file we can add or further change transformations as well.
 
