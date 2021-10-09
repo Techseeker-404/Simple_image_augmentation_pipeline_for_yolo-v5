@@ -12,6 +12,8 @@
 
 #####    This Library was created for this purpose.Which sits on top of the "Albumentations " library. Here apart from augmenting images the bounding box data will also be preserved . 
 
+#### NB:- Need Albumentations>=1.0.3 
+
 #### Once we have images in `images` folder and labels in `labels` folder we can augment images by     running command `python3.8 augmentPipe.py -ipt <images-path> -lpt <labels-path>` on terminal which will create augmented images and labels in a folder called `augmented` , Also number of augmentaions per image can be passed as argument `-Aug <number>`. If the class is imported on a python file we can add or further change transformations as well.
 
 #### Also there is provision to created a .csv file which contains all images path and data classes of that images with its bboxes . It will comes in handy to keep track of image dataset and also needs to convert it into any other format.
