@@ -66,7 +66,7 @@ class AugmentYoloData(OrganiseYoloData):
             print("\n")
             print(img_path,"\n" )
             file_name, _ = os.path.splitext(img_path.split("/")[-1])
-            print(file_name, "\n")
+            #print(file_name, "\n")
             data = row["bbox_data"]
             for i in range(len(data)):
             #    print(dt)
