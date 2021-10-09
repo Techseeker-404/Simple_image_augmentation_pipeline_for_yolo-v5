@@ -7,8 +7,8 @@
 #### Yolo expects data in certain format that images need to be stored in `images` directory and labels needs to stored in `labels` directory .
 
 #### <ins> Augmentation </ins>
- 
-##### As the images numbers are tad bit less for training any state of the art model. We augmented the images to some 250 odd numbers (which can be augmented to any further number of images).
+
+##### If the image dataset we annotated is tad less for training any state of the art model. We need to augment that images to some trainable amount of images (which can be augmented to any further number of images).
 
 #####     For this , created a library which sits on top of the "Albumentations " library. Here apart from augmenting images the bounding box data will also be preserved . 
 
