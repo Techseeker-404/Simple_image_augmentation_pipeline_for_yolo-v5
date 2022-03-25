@@ -51,7 +51,7 @@ class AugmentYoloData(OrganiseYoloData):
             self.transforms = transforms
 
 
-    def augmenter(self, df=None, num_aug=5):
+    def augment(self, df=None, num_aug=5):
         """DataFrame input type."""
         if self.csv_in == True:
             df = df
@@ -140,5 +140,5 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     AugData = AugmentYoloData(args.images_path, args.labels_path)
-    AugData.augmenter(num_aug=int(args.num_of_Aug))
+    AugData.augment(num_aug=int(args.num_of_Aug))
 
