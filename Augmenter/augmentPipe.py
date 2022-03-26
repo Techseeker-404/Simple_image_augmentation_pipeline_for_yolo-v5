@@ -6,7 +6,10 @@ import numpy as np
 import argparse
 import albumentations as Alb
 from tqdm import tqdm
-from OrganiseData import OrganiseYoloData
+try:
+    from OrganiseData import OrganiseYoloData
+except:
+    from Augmenter.OrganiseData import OrganiseYoloData
 
 """Paths of images and labels for augmented data"""
 augmented_images = "augmented/images"

@@ -1,6 +1,10 @@
 import argparse
 import sys
-from augmentPipe import AugmentYoloData
+try:
+    from augmentPipe import AugmentYoloData
+except:
+    from Augmenter.augmentPipe import AugmentYoloData
+    
 def main():
     parser = argparse.ArgumentParser(description="Plz pass arguments")
     parser.add_argument("-ipt", "--images_path", help="Path to images directory")
