@@ -4,6 +4,8 @@ import pandas as pd
 import cv2
 import numpy as np
 import argparse
+from concurrent.futures import ThreadPoolExecutor
+from itertools import repeat
 import albumentations as Alb
 from tqdm import tqdm
 try:
@@ -12,10 +14,10 @@ except:
     from Augmenter.OrganiseData import OrganiseYoloData
 
 """Paths of images and labels for augmented data"""
-augmented_images = "augmented/images"
-augmented_labels = "augmented/labels"
-os.makedirs(augmented_images, exist_ok=True)
-os.makedirs(augmented_labels, exist_ok=True)
+AUGMENTED_IMAGES = "augmented/images"
+AUGMENTED_LABELS = "augmented/labels"
+os.makedirs(AUGMENTED_IMAGES, exist_ok=True)
+os.makedirs(AUGMENTED_LABELS, exist_ok=True)
 
 
 class AugmentYoloData(OrganiseYoloData):
@@ -60,63 +62,66 @@ class AugmentYoloData(OrganiseYoloData):
             df = df
         else:
             df = super().create_organiseData()
+        with ThreadPoolExecutor(max_workers=8) as ex:
+            ex.map(
+                self.data_frame_parallel_augment, #function, 1st arg, 2nd arg as follows
+                [row for _, row in tqdm(df.iterrows())], 
+                repeat(num_aug)     # itertools repeat to repeat integer value per thread.
+            )
 
-        count = 0
-        for ind, row in tqdm(df.iterrows()):
-            class_id = []
-            bboxes = []
-            img_path = row["file_path"]
-            print("\n")
-            print(img_path,"\n" )
-            file_name, _ = os.path.splitext(img_path.split("/")[-1])
-            #print(file_name, "\n")
-            data = row["bbox_data"]
-            for i in range(len(data)):
-            #    print(dt)
-                class_no = data[i][0]
-                class_id.append(class_no)
-                bbox = data[i][1]
-                bboxes.append(bbox)
-                print(class_no, "&", bbox[0], bbox[1], bbox[2], bbox[3])
-            try:
-                image = cv2.imread(img_path)
-                image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
-                bboxParams = Alb.BboxParams(
-                    format='yolo', 
-                    label_fields=['class_id']
+    def data_frame_parallel_augment(self, row, num_aug):
+        class_id = []
+        bboxes = []
+        img_path = row["file_path"]
+        print("\n")
+        print(img_path,"\n" )
+        file_name, _ = os.path.splitext(img_path.split("/")[-1])
+        #print(file_name, "\n")
+        data = row["bbox_data"]
+        for i in range(len(data)):
+        #    print(dt)
+            class_no = data[i][0]
+            class_id.append(class_no)
+            bbox = data[i][1]
+            bboxes.append(bbox)
+            print(class_no, "&", bbox[0], bbox[1], bbox[2], bbox[3])
+        try:
+            image = cv2.imread(img_path)
+            image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+            bboxParams = Alb.BboxParams(
+                format='yolo', 
+                label_fields=['class_id']
+            )
+            transform = Alb.Compose(
+                self.transforms,
+                bbox_params = bboxParams
+            )
+            for i in tqdm(range(num_aug)):
+                transformed = transform(
+                        image=image, 
+                        bboxes=bboxes, 
+                        class_id=class_id
                 )
-                transform = Alb.Compose(
-                    self.transforms,
-                    bbox_params = bboxParams
+                savlst = list()
+                for j,tup in enumerate(transformed["bboxes"]):
+                    savlst.append([
+                        int(transformed["class_id"][j]),
+                        tup[0], tup[1], tup[2], tup[3]
+                    ])
+                #print(savlst)
+                sav_arr = np.array(savlst)
+                #print(sav_arr)
+                np.savetxt(
+                os.path.join(AUGMENTED_LABELS,f"{file_name}_{i}.txt"),
+                sav_arr,
+                fmt = ["%d","%f","%f","%f","%f"],
                 )
-                for i in tqdm(range(num_aug)):
-                    transformed = transform(
-                            image=image, 
-                            bboxes=bboxes, 
-                            class_id=class_id
-                    )
-                    savlst = list()
-                    for j,tup in enumerate(transformed["bboxes"]):
-                        savlst.append([
-                            int(transformed["class_id"][j]),
-                            tup[0], tup[1], tup[2], tup[3]
-                        ])
-                    #print(savlst)
-                    sav_arr = np.array(savlst)
-                    #print(sav_arr)
-                    np.savetxt(
-                    os.path.join(augmented_labels,f"{file_name}_{i}.txt"),
-                    sav_arr,
-                    fmt = ["%d","%f","%f","%f","%f"],
-                    )
-                    new_image = transformed["image"]
-                    new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB)
-                    cv2.imwrite(os.path.join(augmented_images,f"{file_name}_{i}.jpg"),new_image)
-            except Exception:
-                print(f"{img_path} is not a valid image file. \n\n")
-            #break
-            count +=1
-        print("Total images: ", count)
+                new_image = transformed["image"]
+                new_image = cv2.cvtColor(new_image, cv2.COLOR_BGR2RGB)
+                cv2.imwrite(os.path.join(AUGMENTED_IMAGES,f"{file_name}_{i}.jpg"),new_image)
+        except Exception:
+            print(f"{img_path} is not a valid image file. \n\n")
+        #break
 
 
 if __name__ == "__main__":
