@@ -16,6 +16,8 @@
 
 #### Once we have images in `images` folder and labels in `labels` folder we can augment images by     running command `python3.8 Augmenter -ipt <images-path> -lpt <labels-path>` on terminal which will create augmented images and labels in a folder called `augmented` , Also number of augmentaions per image can be passed as argument `-Aug <number>`. If the class is imported on a python file we can add or further change transformations as well.
 
+#### To split dataset into train-test set just pass argument "-spt alongside percentage of test set required". i.e `-spt 20` for creating a test set out of 20% of total files.
+
 #### Also there is provision to created a .csv file which contains all images path and data classes of that images with its bboxes . It will comes in handy to keep track of image dataset and also needs to convert it into any other format.
 #### For additional CLI help, executing command  `python3.8 Augmenter --help or -h` on terminal will provide CLI instructions.
 ##### ```$ tree augmented```
