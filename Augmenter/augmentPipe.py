@@ -16,9 +16,6 @@ except:
 """Paths of images and labels for augmented data"""
 AUGMENTED_IMAGES = "augmented/images"
 AUGMENTED_LABELS = "augmented/labels"
-os.makedirs(AUGMENTED_IMAGES, exist_ok=True)
-os.makedirs(AUGMENTED_LABELS, exist_ok=True)
-
 
 class AugmentYoloData(OrganiseYoloData):
     def __init__(self, imagesPath=None, labelsPath=None, transforms = None, csv_in = False):
@@ -57,6 +54,9 @@ class AugmentYoloData(OrganiseYoloData):
 
 
     def augment(self, df=None, num_aug=5):
+        """Creating Directories."""
+        os.makedirs(AUGMENTED_IMAGES, exist_ok=True)
+        os.makedirs(AUGMENTED_LABELS, exist_ok=True)
         """DataFrame input type."""
         if self.csv_in == True:
             df = df
